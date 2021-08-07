@@ -1,0 +1,285 @@
+@font-face {
+  font-family: bn;
+  src: url(fonts/bangla.ttf);
+}
+body{
+  font-family: arial, bn;
+  background: #303038;
+  color: whitesmoke;
+}
+.update_class{
+  //text-align: center;
+  margin-left: 30%;
+  margin-right: 30%;
+  background: #f0f0f0;
+  padding:50px;
+  font-size: large;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+.login{
+  //text-align: center;
+  margin-left: 30%;
+  margin-right: 30%;
+  background: #f0f0f0;
+  padding:50px;
+  font-size: large;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+}
+
+.input_field{
+  width: 100%;
+  padding: 15px;
+  font-size: large;
+  border:1px solid #262626;
+  border-radius: 5px;
+  outline: none;
+  margin-bottom: 10px;
+  font-family: arial, bn;
+  background: #303038;
+  color: whitesmoke;
+}
+.input_field_login{
+  width: 100%;
+  padding: 15px;
+  font-size: large;
+  border:1px solid #262626;
+  outline: none;
+  background: #303038 !important;
+}
+div.input-group{
+  background: #303038;
+}
+.input-group-addon{
+    background-color: #303038;
+    border: 1px solid #303038;
+}
+.my_button{
+  width: 100%;
+  padding: 15px;
+  font-size: large;
+  border:1px solid #0066b0;
+  border-radius: 5px;
+  outline: none;
+  margin-bottom: 10px;
+  background: #0066b0;
+  color: white;
+  box-shadow: 0 0 15px rgba(0,0,0,0.3);
+  transition: 0.25s;
+}
+.my_button:hover{
+  background: #005491;
+  border:1px solid #005491;
+}
+.msg_box{
+  background: #87ff8d;
+  color: darkgreen;
+  padding: 20px;
+  font-size: large;
+  position: fixed;
+  top:66px;
+  right: 50px;
+  width: 20%;
+  transition: 0.5s;
+  border-left:5px solid green;
+  box-shadow: 0 0 8px rgba(0,0,0,0.3);
+  font-weight: bold;
+  z-index: 1000;
+}
+@media only screen and (max-width: 855px) {
+  .msg_box {
+    width: 100%;
+    right:0px;
+    padding: 15px;
+    opacity: 0.95;
+  }
+}
+#close{
+  float: right;
+}
+.profile_pic{
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  //background: red;
+  //border: 2px solid gray;
+  box-shadow: 0 0 7px rgba(0,0,0,0.4);
+}
+.edit_pic{
+  float: right;
+  font-size: 30px;
+}
+.post_container{
+  margin: 0% 30% 0% 30%;
+  padding: 25px;
+  background: #262626;
+  font-family: arial, bn;
+  color: whitesmoke;
+}
+@media only screen and (max-width: 855px) {
+  .post_container {
+    margin: 0px 15px 0px 15px;
+  }
+}
+.post_container div[style="background:whitesmoke; padding:20px"]{
+  background:#303038 !important;
+  padding:20px !important;
+}
+.diary_post{
+  font-family: arial, bn;
+  background: #262626;
+  box-shadow: 0 0 7px rgba(0,0,0,0.4);
+  padding: 22px;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+.diary_post table{
+  color: #dadada;
+}
+.fa{color: #dadada !important;}
+
+div a[style="color: #333333; font-weight:bold"]{
+  color: #dadada !important;
+  font-weight:bold !important;
+}
+
+.container{
+  font-family: arial, bn;
+  color: whitesmoke;
+}
+.container[style='border:5px solid #e8e8e8']{
+  border:5px solid #303038 !important;
+}
+.table{
+  color:whitesmoke;
+}
+.table tr:nth-child(odd) {
+  background-color: #262626 !important;
+  border-bottom:0px !important;
+}
+.table tr:nth-child(even):hover {
+  background-color: #262626 !important;
+}
+.diary_post .pp{
+  background-size: 25px;
+  background-repeat: no-repeat;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  float:left;
+}
+.diary_post .post_title{
+  text-decoration: none;
+  font-size: 30px;
+  color: whitesmoke;
+}
+.diary_post .view_post_title{
+  text-decoration: none;
+  font-size: 40px;
+  color: darkblue;
+  color: whitesmoke;
+  //font-weight: bold;
+}
+@media only screen and (max-width: 855px) {
+  .diary_post .view_post_title{
+    font-size: 35px;
+    font-weight: bold;
+  }
+}
+.textarea_field{
+  width:100%;
+  padding: 15px;
+  font-size: large;
+  font-family: arial;
+  border:1px solid #262626;
+  border-radius: 5px;
+  outline: none;
+  margin-bottom: 10px;
+  height: 200px;
+  max-width: 100%;
+  font-family: arial, bn;
+  background: #303038;
+  color: whitesmoke;
+}
+.instant_edit{
+  position: fixed;
+  bottom: 30px;
+  right: 40px;
+  border-radius:50%;
+  padding:15px;
+  background: darkblue;
+  box-shadow: 0 0 8px rgba(0,0,0,0.5);
+  width:70px;
+  height: 70px;
+  z-index:1;
+}
+@media only screen and (max-width: 855px) {
+  .instant_edit{
+    width:60px;
+    height: 60px;
+    bottom: 25px;
+    right: 25px;
+    padding:9px;
+  }
+}
+.instant_edit a{
+  text-decoration: none;
+  font-size: 30px;
+  color:white;
+  padding: 5px;
+}
+.diary_view{
+  background: whitesmoke;
+  padding: 100px;
+}
+.diary_view .view_title{
+  text-decoration: none;
+  font-size: large;
+  font-weight: bold;
+  color: black;
+}
+.action_btn_container{
+  margin: 0% 30% 0% 30%;
+  background: #262626;
+}
+@media only screen and (max-width: 855px) {
+  .action_btn_container{
+    margin: 0px 15px 0px 15px;
+  }
+}
+.action_button{
+  width: 50%;
+  padding: 25px;
+  font-size: large;
+  border:0px;
+  //background: #262626 !important;
+  color: whitesmoke;
+  font-weight: bold;
+  //box-shadow: 0 0 8px rgba(0,0,0,0.5);
+}
+@media only screen and (max-width: 855px) {
+  .action_button{
+    padding: 18px;
+    font-size: small;
+  }
+}
+.footer{
+  background:#262626;
+  color:#fff;
+  padding:20px;
+  margin-top:20px;
+  font-size:large;
+  position: relative;
+  bottom:0px;
+}
+.links a{
+  font-size: 30px;
+  text-decoration: none;
+  color: white;
+  padding: 7px;
+}
+.navbar{
+  background: linear-gradient(to left, #00034f, #000238) !important;
+}
