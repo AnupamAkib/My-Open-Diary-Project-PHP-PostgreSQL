@@ -1,7 +1,7 @@
 <?php
 //echo $_POST['update'];
 // Create connection
-$connection = mysqli_connect("remotemysql.com", "Norpxv8Pp5", "GTrjPjE18M");
+$connection = mysqli_connect("remotemysql", "Norpxv8Pp5", "GTrjPjE18M");
 //select database
 $db = mysqli_select_db($connection, "Norpxv8Pp5");
 
