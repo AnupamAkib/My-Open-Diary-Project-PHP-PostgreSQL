@@ -1,10 +1,10 @@
 @font-face {
   font-family: bn;
-  src: url(fonts/bangla.ttf);
+  src: url(/fonts/bangla.ttf);
 }
 @font-face {
   font-family: en;
-  src: url(fonts/Roboto-Regular.ttf);
+  src: url(/fonts/Roboto-Regular.ttf);
 }
 *{
   font-family: en, bn;
@@ -68,9 +68,6 @@ body{
 .my_button:hover{
   background: #0066b0;
   border:1px solid #0066b0;
-}
-.my_button:disabled{
-  opacity: 0.5;
 }
 .msg_box{
   background: #87ff8d;
@@ -141,6 +138,16 @@ body{
   float:left;
   background-color: #d0d0d0;
 }
+.small_pic{
+  background-size: 25px;
+  background-repeat: no-repeat;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  float:left;
+  background-color: #d0d0d0;
+}
+
 .diary_post .post_title{
   text-decoration: none;
   font-size: 30px;
@@ -245,4 +252,46 @@ body{
   text-decoration: none;
   color: white;
   padding: 7px;
+}
+.admin_login_textbox{
+  border:0px;
+  background: #f0f0f0;
+  border-bottom:2px solid gray;
+  margin-bottom:13px;
+  outline:none;
+  font-size:large;
+  width:100%;
+  padding:9px;
+}
+.admin_login_panel_container{
+  padding:20px;
+  background: #f0f0f0;
+}
+.boxx{
+  float:left;
+  color:white;
+  padding:30px;
+  width:25%;
+  border-left:8px solid #b9bf00;
+  box-shadow: 0 0 8px rgba(0,0,0,0.5);
+}
+@media only screen and (max-width: 855px) {
+  .boxx{
+    width:100%;
+  }
+}
+.card{
+  background: white;
+  box-shadow: 0 0 12px rgba(0,0,0,0.2);
+  font-size: large;
+  width:50%;
+  padding:15px;
+}
+.card_container{
+  width:70%;
+}
+@media only screen and (max-width: 855px) {
+  .card_container{
+    width:100%;
+  }
 }

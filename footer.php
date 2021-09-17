@@ -2,7 +2,7 @@
   <div class="container">
     <center>
       <h2>My Open Diary</h2>
-      <b>Version:</b> 1.5 (Stable) <hr>
+      <b>Version:</b> 2.5 (Stable) <hr>
       <div class="links">
           <a href="mailto: mirakib25@gmail.com"><i class='fa fa-envelope'></i></a>
           <a href="https://github.com/AnupamAkib"><i class='fa fa-github'></i></a>

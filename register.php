@@ -4,6 +4,7 @@ if(isset($_SESSION['logged_in'])){
   //echo getcwd();
   echo "<script> window.location.href='profile.php'; </script>";
 }
+
 ?>
 <title>My Open Diary | Register</title>
 <!--<h1 align='center'>Create New Account</h1>-->
@@ -19,43 +20,48 @@ if(isset($_SESSION['logged_in'])){
     <input type="date" name="birthday" value="<?php if(isset($_POST['birthday'])) echo $_POST['birthday'] ?>" placeholder="Date of Birth" class='input_field' required/><br>
     <label for="">Gender:</label><br>
     <select class='input_field' name='gender' required>
-      <option value="Male">Male</option>
-      <option value="Female">Female</option>
-      <option value="Other">Other</option>
+      <option value="Male" <?php if(isset($_POST['gender']) && $_POST['gender']=='Male') echo "selected" ?> >Male</option>
+      <option value="Female" <?php if(isset($_POST['gender']) && $_POST['gender']=='Female') echo "selected" ?>>Female</option>
+      <option value="Other" <?php if(isset($_POST['gender']) && $_POST['gender']=='Other') echo "selected" ?>>Other</option>
     </select><br>
     <label for="">Password:</label><br>
     <input type="password" name="pass" value="" placeholder="Password" class='input_field' required/><br>
     <label for="">Re-write Password:</label><br>
     <input type="password" name="pass_again" value="" placeholder="Re-write Password" class='input_field' required/><br>
 
-    <input type="submit" name="register" value="CREATE ACCOUNT" class='my_button'/>
+    <input type="submit" name="register" value="CREATE ACCOUNT" class='my_button' id='target_btn'/>
   </form>
 </div>
 
 <?php
 if(isset($_POST['register'])){
-  $fname = mysqli_real_escape_string($connection, ucwords($_POST['fname']));
-  $lname = mysqli_real_escape_string($connection, ucwords($_POST['lname']));
+  $fname = ucwords($_POST['fname']);
+  $lname = ucwords($_POST['lname']);
   $name = $fname." ".$lname;
-  $email = mysqli_real_escape_string($connection, $_POST['email']);
+  $email = $_POST['email'];
   $birthday = $_POST['birthday'];
   $gender = $_POST['gender'];
-  $pass = mysqli_real_escape_string($connection, $_POST['pass']);
-  $pass_again = mysqli_real_escape_string($connection, $_POST['pass_again']);
+  $pass = $_POST['pass'];
+  $pass_again = $_POST['pass_again'];
 
-  $query = "select * from profile where email = '$email'";
-  $query_run = mysqli_query($connection, $query)or die("<script>msg('Opps! Something wrong','red')</script>");
-  if(mysqli_num_rows($query_run)){
+  $query = "select * from profile where email = $1";
+  $query_run = pg_prepare($connection, "", $query);
+  $query_run = pg_execute($connection, "", array($_POST["email"]))or die("<script>msg('Opps! Something wrong','red')</script>");
+
+  if(pg_num_rows($query_run)){
     echo "<script>msg('The email is already exists', 'red')</script>";
   }
   elseif($pass==$pass_again){
     if(check_password($pass)){
+      echo "<script> disable_btn('target_btn') </script>";
       $query = "
         insert into profile(fname, lname, name, email, birthday, gender, pass, phone, address, picture)
         values
-        ('$fname', '$lname', '$name', '$email', '$birthday', '$gender', '$pass', '+880', '', 'default_picture.jpg');
+        ($1, $2, $3, $4, $5, $6, $7, '+880', '', 'default_picture.jpg');
       ";
-      $query_run = mysqli_query($connection, $query)or die("<script>msg('Opps! Something wrong','red')</script>");
+      $query_run = pg_prepare($connection, "", $query);
+      $query_run = pg_execute($connection, "", array($fname, $lname, $name, $email, $birthday, $gender, $pass))or die("<script>msg('Opps! Something wrong','red')</script>");
+
       $_SESSION['new_account_created'] = true;
       $_SESSION['logged_in'] = true;
       $_SESSION['email'] = $email;
@@ -64,7 +70,6 @@ if(isset($_POST['register'])){
       $_SESSION['user_last_name'] = $lname;
       $_SESSION['user_pp'] = 'default_picture.jpg';
       $_SESSION['user_password'] = $pass;
-      //echo $query;
       echo "<script>window.location.href='index.php';</script>";
     }
   }

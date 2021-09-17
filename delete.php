@@ -22,13 +22,14 @@ else{
   $author_email='';
   $title='null';
   $date_time='null';
-  $query = "SELECT * FROM diary WHERE id = $id";
-  $query_run = mysqli_query($connection, $query)or die("<script>msg('Opps! Something wrong','red')</script>");
-  if(mysqli_num_rows($query_run)){
-    while($row = mysqli_fetch_array($query_run)){
+  $query = "SELECT * FROM diary WHERE id = $1";
+  $query_run = pg_prepare($connection, "", $query);
+  $query_run = pg_execute($connection, "", array($id))or die("<script>msg('Opps! Something wrong','red')</script>");
+  if(pg_num_rows($query_run)){
+    while($row = pg_fetch_array($query_run)){
       $title = nl2br(htmlentities($row['title']));
       $author_email = $row['author_email'];
-      $date_time = $row['dateAndTime'];
+      $date_time = $row['dateandtime'];
     }
     if($author_email == $_SESSION['email']){
       ?>
@@ -40,14 +41,19 @@ else{
         <font size='5' color='darkblue'><b><a href='diary.php?story=<?php echo $id ?>'><?php echo $title ?></a></b></font><br>
         <label for="">Date of creation:</label><br>
         <span><?php echo $date_time ?></span><br><br>
-        <form method='POST'><input type="submit" name="yes" class="btn btn-danger btn-lg" value='YES, Delete'/>
+        <form method='POST'><input type="submit" name="yes" class="btn btn-danger btn-lg" value='YES, Delete' id='target_btn'/>
         <a type="button" name="no" class="btn btn-default btn-lg" href="my_diary.php?action=view">NO, Go back</a>
       </form>
       </div>
       <?php
       if(isset($_POST['yes'])){
-        $query = "DELETE FROM diary WHERE id=$id";
-        $query_run = mysqli_query($connection, $query)or die("<script>msg('Opps! Something wrong','red')</script>");
+        echo "<script> disable_btn('target_btn') </script>";
+        $query = "DELETE FROM diary WHERE id=$1";
+        $query_run = pg_prepare($connection, "", $query);
+        $query_run = pg_execute($connection, "", array($id))or die("<script>msg('Opps! Something wrong','red')</script>");
+        if(isset($_SESSION['view_as_admin'])){
+          echo "<script>window.location.href='/admin/search_user.php?email=$author_email'</script>";
+        }
         $_SESSION['story_deleted'] = true;
         echo "<script>window.location.href='my_diary.php?action=view'</script>";
       }

@@ -10,10 +10,11 @@ if(isset($_SESSION['large_title'])){
 }
 if(isset($_GET['story'])){
   $id = $_GET['story'];
-  $query = "SELECT * FROM diary WHERE id=$id";
-  $query_run = mysqli_query($connection, $query)or die("<script>msg('Opps! Something wrong','red')</script>");
-  if(mysqli_num_rows($query_run)){
-    while($row = mysqli_fetch_array($query_run)){
+  $query = "SELECT * FROM diary WHERE id=$1";
+  $query_run = pg_prepare($connection, "", $query);
+  $query_run = pg_execute($connection, "", array($id))or die("<script>msg('Opps! Something wrong','red')</script>");
+  if(pg_num_rows($query_run)){
+    while($row = pg_fetch_array($query_run)){
       $title = nl2br(htmlentities($row['title']));
       $description = $row['description'];
       $status = $row['status'];
@@ -34,32 +35,37 @@ if(isset($_GET['story'])){
               <option value="Public" <?php if($status=='Public'){echo 'selected';} ?>>Public</option>
               <option value="Private"<?php if($status=='Private'){echo 'selected';} ?>>Private</option>
             </select><br>
-            <input type="submit" name="submit_updated_story" value="UPDATE" class="my_button"/>
+            <input type="submit" name="submit_updated_story" value="UPDATE" class="my_button" id='target_btn'/>
           </form>
         </div>
         <?php
         if(isset($_POST['submit_updated_story'])){
-          $updated_title = mysqli_real_escape_string($connection, $_POST['updated_title']);
+          $updated_title = $_POST['updated_title'];
           if(strlen($updated_title) > 110){
             $_SESSION['large_title'] = true;
             echo "<script>window.location.href='?story=$id'</script>";
           }
           else{
-            $updated_description = mysqli_real_escape_string($connection, $_POST['updated_description']);
+            echo "<script> disable_btn('target_btn') </script>";
+            $updated_description = $_POST['updated_description'];
             $updated_status = $_POST['updated_status'];
             $last_mod = date("M d, Y | h:i A");
             //echo $last_mod;
             $query1 = "
             UPDATE diary
             SET
-            title = '$updated_title',
-            description = '$updated_description',
-            status = '$updated_status',
-            last_update = '$last_mod'
-            WHERE id = $id
+            title = $1,
+            description = $2,
+            status = $3,
+            last_update = $4
+            WHERE id = $5
             ";
-            $query_run1 = mysqli_query($connection, $query1)or die("<script>msg('Opps! Something wrong','red')</script>");
+            $query_run1 = pg_prepare($connection, "", $query1);
+            $query_run1 = pg_execute($connection, "", array($updated_title, $updated_description, $updated_status, $last_mod, $id))or die("<script>msg('Opps! Something wrong','red')</script>");
             //echo $query_run;
+            if(isset($_SESSION['view_as_admin'])){
+              echo "<script>window.location.href='/admin/search_user.php?email=$auth_email'</script>";
+            }
             $_SESSION['story_updated'] = true;
             echo "<script>window.location.href='my_diary.php?action=view'</script>";
           }

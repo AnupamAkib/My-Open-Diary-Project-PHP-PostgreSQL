@@ -2,8 +2,14 @@
   font-family: bn;
   src: url(fonts/bangla.ttf);
 }
+@font-face {
+  font-family: en;
+  src: url(fonts/Roboto-Regular.ttf);
+}
+*{
+  font-family: en, bn;
+}
 body{
-  font-family: arial, bn;
   background: #303038;
   color: whitesmoke;
 }
@@ -37,7 +43,7 @@ body{
   border-radius: 5px;
   outline: none;
   margin-bottom: 10px;
-  font-family: arial, bn;
+  font-family: en, bn;
   background: #303038;
   color: whitesmoke;
 }
@@ -68,6 +74,9 @@ div.input-group{
   color: white;
   box-shadow: 0 0 15px rgba(0,0,0,0.3);
   transition: 0.25s;
+}
+.my_button:disabled{
+  opacity: 0.5;
 }
 .my_button:hover{
   background: #005491;
@@ -115,7 +124,7 @@ div.input-group{
   margin: 0% 30% 0% 30%;
   padding: 25px;
   background: #262626;
-  font-family: arial, bn;
+  font-family: en, bn;
   color: whitesmoke;
 }
 @media only screen and (max-width: 855px) {
@@ -128,7 +137,7 @@ div.input-group{
   padding:20px !important;
 }
 .diary_post{
-  font-family: arial, bn;
+  font-family: en, bn;
   background: #262626;
   box-shadow: 0 0 7px rgba(0,0,0,0.4);
   padding: 22px;
@@ -146,7 +155,7 @@ div a[style="color: #333333; font-weight:bold"]{
 }
 
 .container{
-  font-family: arial, bn;
+  font-family: en, bn;
   color: whitesmoke;
 }
 .container[style='border:5px solid #e8e8e8']{
@@ -192,14 +201,13 @@ div a[style="color: #333333; font-weight:bold"]{
   width:100%;
   padding: 15px;
   font-size: large;
-  font-family: arial;
+  font-family: en, bn;
   border:1px solid #262626;
   border-radius: 5px;
   outline: none;
   margin-bottom: 10px;
   height: 200px;
   max-width: 100%;
-  font-family: arial, bn;
   background: #303038;
   color: whitesmoke;
 }
@@ -282,4 +290,9 @@ div a[style="color: #333333; font-weight:bold"]{
 }
 .navbar{
   background: linear-gradient(to left, #00034f, #000238) !important;
+}
+.alert-warning{
+  background-color: #2e2e2e !important;
+  color: white !important;
+  border-color: #262626 !important;
 }

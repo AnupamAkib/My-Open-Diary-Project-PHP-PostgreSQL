@@ -7,20 +7,30 @@ if(isset($_SESSION['logged_in'])==false){
 if(isset($_SESSION['story_updated'])){
   echo "<script>msg('Story updated successfully', 'green')</script>";
   unset($_SESSION['story_updated']);
+  $act = new activity($_SESSION['email']);
+  $act->setActivity("User edited a story");
 }
 if(isset($_SESSION['logged_in_flag'])){
   echo "<script>
     msg('Successfully logged in', 'green');
   </script>";
   unset($_SESSION['logged_in_flag']);
+
+  $act = new activity($_SESSION['email']);
+  $act->setActivity("Logged in to the system.");
+
 }
 if(isset($_SESSION['new_story_added'])){
   echo "<script>msg('Story created successfully', 'green')</script>";
   unset($_SESSION['new_story_added']);
+  $act = new activity($_SESSION['email']);
+  $act->setActivity("User created a story");
 }
 if(isset($_SESSION['story_deleted'])){
   unset($_SESSION['story_deleted']);
   echo "<script>msg('Story deleted', 'green')</script>";
+  $act = new activity($_SESSION['email']);
+  $act->setActivity("User deleted a story");
 }
 ?>
 <center>

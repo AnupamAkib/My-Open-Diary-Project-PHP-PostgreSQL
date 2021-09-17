@@ -16,28 +16,29 @@ if(isset($_SESSION['large_title'])){
        <option value="Public" <?php if(isset($_POST['status']) && $_POST['status']=='Public') echo 'selected' ?>>Public</option>
        <option value="Private"<?php if(isset($_POST['status']) && $_POST['status']=='Private') echo 'selected' ?>>Private</option>
      </select><br>
-     <input type="submit" name="new_story" value="CREATE STORY" class="my_button"/>
+     <input type="submit" name="new_story" value="CREATE STORY" class="my_button" id='target_btn'/>
    </form>
  </div>
 
 <?php
 if(isset($_POST['new_story'])){
-  $title = mysqli_real_escape_string($connection, $_POST['title']);
+  $title = $_POST['title'];
   if(strlen($title) > 110){
     //$_SESSION['large_title'] = true;
     //echo "<script>window.location.href='?action=create'</script>";
     echo "<script>msg('Story title is too large!', 'yellow')</script>";
   }
   else{
-    $description = mysqli_real_escape_string($connection, $_POST['description']);
+    echo "<script> disable_btn('target_btn') </script>";
+    $description = $_POST['description'];
     $status = $_POST['status'];
     $date_time = date("M d, Y | h:i A");
-    $author_email = mysqli_real_escape_string($connection, $_SESSION['email']);
+    $author_email = $_SESSION['email'];
 
     $query = "SELECT MAX(id) as max_id FROM diary";
-    $query_run = mysqli_query($connection, $query)or die("<script>msg('Opps! Something wrong','red')</script>");
+    $query_run = pg_query($connection, $query)or die("<script>msg('Opps! Something wrong','red')</script>");
     $id = 0;
-    while($row = mysqli_fetch_array($query_run)){
+    while($row = pg_fetch_array($query_run)){
       $id = $row['max_id'];
     }
     $id++;
@@ -46,9 +47,11 @@ if(isset($_POST['new_story'])){
     $query = "
     INSERT INTO diary(id, title, description, dateAndTime, author_email, status, last_update)
     VALUES
-    ($id, '$title', '$description', '$date_time', '$author_email', '$status', 'null');
+    ($1, $2, $3, $4, $5, $6, 'null');
     ";
-    $query_run = mysqli_query($connection, $query)or die("<script>msg('Opps! Something wrong','red')</script>");
+    $query_run = pg_prepare($connection, "", $query);
+    $query_run = pg_execute($connection, "", array($id, $title, $description, $date_time, $author_email, $status))or die("<script>msg('Opps! Something wrong','red')</script>");
+
     $_SESSION['new_story_added'] = true;
     echo "<script>window.location.href='my_diary.php?action=view'</script>";
   }

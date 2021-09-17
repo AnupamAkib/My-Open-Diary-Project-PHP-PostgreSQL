@@ -34,3 +34,9 @@ function active_btn_effect(active){
     document.getElementById('first_btn').style.boxShadow = "inset 0 -8px 7px -7px rgba(0,0,0,0.22)";
   }
 }
+
+function disable_btn(id_name){
+    document.getElementById(id_name).disabled = true;
+    document.getElementById(id_name).value = "Please Wait";
+    document.getElementById(id_name).innerHTML = "Please Wait";
+}

@@ -5,6 +5,8 @@ if(isset($_SESSION['new_account_created'])){
   echo "<script>
     msg('Account successfully created', 'green');
   </script>";
+  $act = new activity($_SESSION['email']);
+  $act -> setActivity("User created an account");
 }
 if(isset($_GET['page'])==false or $_GET['page']==0){
   $_GET['page'] = 1;
@@ -17,7 +19,12 @@ $page = $_GET['page'];
 
 
 <div class="container">
-  <h1>Public Diaries<span style='float:right; color:darkblue; background:#e3e3e3; padding:0px 11px 0px 11px; border:3px solid darkblue; opacity:0.7; border-radius:50%'><?php echo $page ?></span></h1><hr style='border:1px solid gray'>
+  <h1>Public Stories
+    <span style='float:right; color:darkblue; background:#e3e3e3; padding:0px 11px 0px 11px; border:3px ridge darkblue; opacity:0.7; border-radius:0%;box-shadow: 0 0 4px rgba(0,0,0,0.3);'><?php echo $page ?></span>
+  </h1>
+
+
+  <hr style='border:1px solid gray'>
 
 
 <?php
@@ -27,24 +34,34 @@ $start = ($page-1) * 7;
 $end = $page * 7;
 $post_flag = false;
 $query = "SELECT * FROM diary WHERE status = 'Public' ORDER BY id DESC";
-$query_run = mysqli_query($connection, $query)or die("<script>msg('Opps! Something wrong','red')</script>");
-if(mysqli_num_rows($query_run)){
-  while($row = mysqli_fetch_array($query_run)){
+$query_run = pg_query($connection, $query)or die("<script>msg('Opps! Something wrong','red')</script>");
+if(pg_num_rows($query_run)){
+  while($row = pg_fetch_array($query_run)){
     $cnt++;
     if($cnt > $start && $cnt <= $end){
       $post_flag = true;
       $id = $row['id'];
       $title = $row['title'];
       $author_email = $row['author_email'];
-      $date_time = $row['dateAndTime'];
+      $date_time = $row['dateandtime'];
       $author_name = 'null';
       $author_pic = 'null';
 
-      $query1 = "SELECT * from profile where email = '$author_email'";
-      $query_run1 = mysqli_query($connection, $query1);
-      while($data = mysqli_fetch_array($query_run1)){
+      $query1 = "SELECT * from profile where email = $1";
+      $query_run1 = pg_prepare($connection, "", $query1);
+      $query_run1 = pg_execute($connection, "", array($author_email))or die("<script>msg('Opps! Something wrong','red')</script>");
+
+      while($data = pg_fetch_array($query_run1)){
         $author_name = nl2br(htmlentities($data['name']));
-        $author_pic = $data['picture'];
+
+        $tmp = $data['picture'];
+        $tmp = $_SERVER['DOCUMENT_ROOT'] . '/uploads/'.$tmp;
+        if(file_exists($tmp)){
+          $author_pic = $data['picture'];
+        }
+        else{
+          $author_pic = "default_picture.jpg";
+        }
       }
       ?>
       <div class="diary_post">

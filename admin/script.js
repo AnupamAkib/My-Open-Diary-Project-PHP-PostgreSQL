@@ -19,17 +19,17 @@ function change_pp(){
 function active_btn_effect(active){
   if(active=='first'){
     document.getElementById('first_btn').style.boxShadow = "inset -7px 0 7px -7px rgba(0,0,0,0.4)";
-    document.getElementById('first_btn').style.background = "#262626";
-    document.getElementById('second_btn').style.background = "#35353d";
-    document.getElementById('second_btn').style.color = "#b5b5b5";
+    document.getElementById('first_btn').style.background = "#e8e8e8";
+    document.getElementById('second_btn').style.background = "#f7f7f7";
+    document.getElementById('second_btn').style.color = "#474747";
     document.getElementById('second_btn').style.fontWeight = "normal";
     document.getElementById('second_btn').style.boxShadow = "inset 0 -8px 7px -7px rgba(0,0,0,0.22)";
   }
   else{
     document.getElementById('second_btn').style.boxShadow = "inset 7px 0 7px -7px rgba(0,0,0,0.4)";
-    document.getElementById('second_btn').style.background = "#262626";
-    document.getElementById('first_btn').style.background = "#35353d";
-    document.getElementById('first_btn').style.color = "#b5b5b5";
+    document.getElementById('second_btn').style.background = "#e8e8e8";
+    document.getElementById('first_btn').style.background = "#f7f7f7";
+    document.getElementById('first_btn').style.color = "#474747";
     document.getElementById('first_btn').style.fontWeight = "normal";
     document.getElementById('first_btn').style.boxShadow = "inset 0 -8px 7px -7px rgba(0,0,0,0.22)";
   }

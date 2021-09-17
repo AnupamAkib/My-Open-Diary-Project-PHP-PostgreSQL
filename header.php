@@ -1,8 +1,17 @@
 <?php
 session_start();
 include "connect_db.php";
+include "admin/activity.php";
+include 'admin/settings.php';
+include 'admin/notification.php';
+
+$notice = notification::getInstance();
+
+
 date_default_timezone_set("Asia/Dhaka");
 if(isset($_GET['logout'])){
+  $act = new activity($_SESSION['email']);
+  $act -> setActivity("User logged out from the system");
   unset($_SESSION['logged_in']);
   unset($_SESSION['email']);
   unset($_SESSION['user_name']);
@@ -79,6 +88,11 @@ function check_password($pwd){ //can not countain ' and $ (minimun length 6)
          <li><a href="/">Home</a></li>
          <li><a href="/about.php">About</a></li>
          <li><a href="mailto: mirakib25@gmail.com">Feedback</a></li>
+         <?php
+         if(isset($_SESSION['admin_logged_in'])){
+           echo "<li><a href='/admin/'>Admin Panel</a></li>";
+         }
+          ?>
        </ul>
 
 
@@ -95,9 +109,11 @@ function check_password($pwd){ //can not countain ' and $ (minimun length 6)
          <?php
          if(isset($_SESSION['logged_in'])){
            $email = $_SESSION['email'];
-           $query = "SELECT * from profile where email = '$email'";
-           $query_run = mysqli_query($connection, $query);
-           while($row = mysqli_fetch_array($query_run)){
+           $query = "SELECT * from profile where email = $1";
+           $query_run = pg_prepare($connection, "", $query);
+           $query_run = pg_execute($connection, "", array($email))or die("<script>msg('Opps! Something wrong','red')</script>");
+
+           while($row = pg_fetch_array($query_run)){
              $first_name = $row['fname'];
              $name = $row['name'];
              $pic = $row['picture'];
@@ -130,8 +146,34 @@ function check_password($pwd){ //can not countain ' and $ (minimun length 6)
    </div>
  </nav>
  <br><br><br><br>
+
+
 <?php
+if($notice -> getNoticeFlag()){
+  ?>
+  <div class="container">
+    <div class="alert alert-warning alert-dismissible" style='font-size:large'>
+      <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+      <?php echo $notice->getNotice() ?>
+    </div>
+  </div>
+  <?php
+}
+
+
+
+
+
 if(isset($_GET['theme'])){
+  $md = $_GET['theme'];
+  if(isset($_SESSION['logged_in'])){
+    $act = new activity($_SESSION['email']);
+    $act -> setActivity("User goto $md mode");
+  }
+  else{
+    $act = new activity('Someone');
+    $act -> setActivity("Someone goto $md mode");
+  }
   $_SESSION['theme'] = $_GET['theme'];
   unset($_GET['theme']);
   echo "<script>window.location.href='$prev_link'</script>";

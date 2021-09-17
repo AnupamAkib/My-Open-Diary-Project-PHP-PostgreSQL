@@ -1,9 +1,10 @@
 <?php
 //echo $_POST['update'];
 // Create connection
-$connection = mysqli_connect("remotemysql", "Norpxv8Pp5", "GTrjPjE18M");
-//select database
-$db = mysqli_select_db($connection, "Norpxv8Pp5");
+
+include 'admin/database_login.php';
+$connection = pg_connect($conn_string) or die("<script>msg('Could not connect to PostgreSQL', 'red')</script>");
+
 
 if($connection){
   //echo "Database Connected<hr>";
@@ -16,7 +17,6 @@ else{
   My Open Diary</div><center><img src='not_connected.png' width='150px'></center>
   <div style='padding:10px;'><h2>Unable to connect database</h2>We are sorry. The system could not be connected with the database this time. Please reload this page or try again later.
   <br><br>
-  Database hosted at <a href='https://remotemysql.com/'>remotemysql.com/</a>
   </div></div>");
 }
 ?>

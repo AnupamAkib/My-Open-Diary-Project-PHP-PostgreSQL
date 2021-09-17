@@ -21,16 +21,26 @@ include "upload.php";
 //echo $_POST['email'];
 if(isset($_POST['update'])==false){
   $email = $_SESSION['email'];
-  $query = "SELECT * FROM profile WHERE email = '$email'";
-  $query_run = mysqli_query($connection, $query)or die("<script>msg('Opps! Something wrong','red')</script>");
+  $query = "SELECT * FROM profile WHERE email = $1";
+  $query_run = pg_prepare($connection, "", $query);
+  $query_run = pg_execute($connection, "", array($email))or die("<script>msg('Opps! Something wrong','red')</script>");
   //echo $query;
-  if(mysqli_num_rows($query_run)){ //check if result found. if result found the mysqli_num_rows will return true;
-    while($row = mysqli_fetch_array($query_run)){
+  if(pg_num_rows($query_run)){ //check if result found. if result found the pg_num_rows will return true;
+    while($row = pg_fetch_array($query_run)){
       $_SESSION['email'] = $row['email'];
+      $my_pic = $row['picture'];
+      $tmp = $row['picture'];
+      $tmp = $_SERVER['DOCUMENT_ROOT'] . '/uploads/'.$tmp;
+      if(file_exists($tmp)){
+        $my_pic = $row['picture'];
+      }
+      else{
+        $my_pic = "default_picture.jpg";
+      }
       ?>
 
       <div class='post_container'>
-        <center><div onclick='change_pp()' class='profile_pic' style="background-image: url('uploads/<?php echo $row['picture'] ?>'); background-size: 200px; background-repeat: no-repeat;">
+        <center><div onclick='change_pp()' class='profile_pic' style="background-image: url('uploads/<?php echo $my_pic ?>'); background-size: 200px; background-repeat: no-repeat;">
           <span title='Edit profile picture' class='edit_pic' id='edit_pic'><i class="fa fa-edit"></i></span>
         </div>
         <font id='upload_image'></font>
@@ -64,14 +74,14 @@ if(isset($_POST['update'])==false){
           <label for="address">Address: </label><br>
           <input class='input_field' id="address" type="text" name="address" value="<?php echo nl2br(htmlentities($row['address'])) ?>" placeholder="Enter Address"><br>
 
-          <input class='my_button' name='update' type='submit' value='UPDATE PROFILE'/>
+          <input class='my_button' name='update' type='submit' value='UPDATE PROFILE' id='target_btn'/>
         </form>
       </div>
       <?php
 
     }
   }
-  else{ //mysqli_num_rows() is 0, that means no result found
+  else{ //pg_num_rows() is 0, that means no result found
     echo "<script>msg('Data not found!', 'red')</script>";
     unset($_SESSION['logged_in']);
     $_SESSION['logged_out'] = true;
@@ -81,49 +91,65 @@ if(isset($_POST['update'])==false){
 
 if(isset($_POST['update'])){
   unset($_POST['update']);
-  $fname = mysqli_real_escape_string($connection, ucwords($_POST['fname']));
-  $lname = mysqli_real_escape_string($connection, ucwords($_POST['lname']));
+  $fname = ucwords($_POST['fname']);
+  $lname = ucwords($_POST['lname']);
   $name = $fname.' '.$lname;
   $email = $_SESSION['email'];
   $sex = $_POST['gender'];
   $bday = $_POST['bday'];
-  $phone = mysqli_real_escape_string($connection, $_POST['phn']);
-  $address = mysqli_real_escape_string($connection, ucwords($_POST['address']));
+  $phone = $_POST['phn'];
+  $address = ucwords($_POST['address']);
 
 
   $query = "
     UPDATE profile
     SET
-    fname='$fname',
-    lname = '$lname',
-    name = '$name',
-    email= '$email',
-    birthday= '$bday',
-    gender= '$sex',
-    phone= '$phone',
-    address = '$address'
-    WHERE email='$email';
+    fname=$1,
+    lname = $2,
+    name = $3,
+    email= $4,
+    birthday= $5,
+    gender= $6,
+    phone= $7,
+    address = $8
+    WHERE email=$9;
   ";
-  $query_run = mysqli_query($connection, $query)or die("<script>msg('Opps! Something wrong','red')</script>");
+  $query_run = pg_prepare($connection, "", $query);
+  $query_run = pg_execute($connection, "", array($fname, $lname, $name, $email, $bday, $sex, $phone, $address, $email))or die("<script>msg('Opps! Something wrong','red')</script>");
   if($query_run){
-    $query1 = "SELECT * FROM profile WHERE email = '$email'"; //print the updated result
-    $query_run1 = mysqli_query($connection, $query1)or die("<script>msg('Opps! Something wrong','red')</script>");
+    $query1 = "SELECT * FROM profile WHERE email = $1"; //print the updated result
+    $query_run1 = pg_prepare($connection, "", $query1);
+    $query_run1 = pg_execute($connection, "", array($email))or die("<script>msg('Opps! Something wrong','red')</script>");
 
-    if(mysqli_num_rows($query_run1)){ //check if result found. if result found the mysqli_num_rows will return true;
-      while($row = mysqli_fetch_array($query_run1)){
+    if(pg_num_rows($query_run1)){ //check if result found. if result found the pg_num_rows will return true;
+      while($row = pg_fetch_array($query_run1)){
         $_SESSION['email'] = $row['email'];
         $_SESSION['user_name'] = $row['name'];
         $_SESSION['user_first_name'] = $row['fname'];
         $_SESSION['user_last_name'] = $row['lname'];
-        $_SESSION['user_pp'] = $row['picture'];
+        $my_pic = $row['picture'];
+        $tmp = $row['picture'];
+        $tmp = $_SERVER['DOCUMENT_ROOT'] . '/uploads/'.$tmp;
+        if(file_exists($tmp)){
+          $my_pic = $row['picture'];
+        }
+        else{
+          $my_pic = "default_picture.jpg";
+        }
+        $_SESSION['user_pp'] = $my_pic;
         ?>
-
+        <?php
+        $x = "her";
+        if($sex=="Male") $x="his";
+        $act = new activity($_SESSION['email']);
+        $act->setActivity("User edited $x profile information");
+         ?>
         <script>
           window.msg("Data successfully updated", "green");
         </script>
 
         <div class='post_container'>
-          <center><div onclick='change_pp()' class='profile_pic' style="background-image: url('uploads/<?php echo $row['picture'] ?>'); background-size: 200px; background-repeat: no-repeat;">
+          <center><div onclick='change_pp()' class='profile_pic' style="background-image: url('uploads/<?php echo $my_pic ?>'); background-size: 200px; background-repeat: no-repeat;">
             <span title='Edit profile picture' class='edit_pic' id='edit_pic'><i class="fa fa-edit"></i></span>
           </div>
           <font id='upload_image'></font>
@@ -157,7 +183,7 @@ if(isset($_POST['update'])){
             <label for="address">Address: </label><br>
             <input class='input_field' id="address" type="text" name="address" value="<?php echo nl2br(htmlentities($row['address'])) ?>" placeholder="Enter Address"><br>
 
-            <input class='my_button' name='update' type='submit' value='UPDATE PROFILE'/>
+            <input class='my_button' name='update' type='submit' value='UPDATE PROFILE' id='target_btn'/>
           </form>
         </div>
 

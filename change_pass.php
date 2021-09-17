@@ -19,14 +19,14 @@
      <input type="password" name="new_pass" value="" placeholder="New Password" class='input_field' required>
      <label for="">Re-enter New Password:</label><br>
      <input type="password" name="new_pass_again" value="" placeholder="Re-write the password" class='input_field' required>
-     <input type="submit" name="change_password_btn" value="CHANGE PASSWORD" class='my_button'>
+     <input type="submit" name="change_password_btn" value="CHANGE PASSWORD" class='my_button' id='target_btn'>
    </form>
  </div>
 <?php
 if(isset($_POST['change_password_btn'])){
-  $cur_pass = mysqli_real_escape_string($connection, $_POST['old_pass']);
-  $new_pass = mysqli_real_escape_string($connection, $_POST['new_pass']);
-  $new_pass_again = mysqli_real_escape_string($connection, $_POST['new_pass_again']);
+  $cur_pass = $_POST['old_pass'];
+  $new_pass = $_POST['new_pass'];
+  $new_pass_again = $_POST['new_pass_again'];
   $now_pass = $_SESSION['user_password'];
   $user_email = $_SESSION['email'];
 
@@ -34,10 +34,13 @@ if(isset($_POST['change_password_btn'])){
     if($new_pass == $new_pass_again){
       //change
       if(check_password($new_pass)){
-        $query = "update profile set pass='$new_pass' where email='$user_email'";
-        $query_run = mysqli_query($connection, $query)or die("<script>msg('Opps! Something wrong','red')</script>");
+        $query = "update profile set pass=$1 where email=$2";
+        $query_run = pg_prepare($connection, "", $query);
+        $query_run = pg_execute($connection, "", array($new_pass, $user_email))or die("<script>msg('Opps! Something wrong','red')</script>");
         $_SESSION['user_password'] = $new_pass;
         echo "<script>msg('Password changed successfully', 'green')</script>";
+        $act = new activity($_SESSION['email']);
+        $act->setActivity("User changed password");
       }
     }
     else{

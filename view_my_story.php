@@ -2,13 +2,15 @@
 //echo "view my story\n";
 $email = $_SESSION['email'];
 //echo $email;
-$query = "SELECT * FROM diary WHERE author_email='$email' ORDER BY id DESC";
-$query_run = mysqli_query($connection, $query)or die("<script>msg('Opps! Something wrong','red')</script>");
+$query = "SELECT * FROM diary WHERE author_email=$1 ORDER BY id DESC";
+$query_run = pg_prepare($connection, "", $query);
+$query_run = pg_execute($connection, "", array($email))or die("<script>msg('Opps! Something wrong','red')</script>");
+
 ?>
 <title>View My Stories</title>
 <div class="container" style="border:5px solid #e8e8e8">
 <?php
-if(mysqli_num_rows($query_run)){
+if(pg_num_rows($query_run)){
   ?>
   <table class='table table-striped table-hover' border=0>
     <tr>
@@ -17,13 +19,13 @@ if(mysqli_num_rows($query_run)){
       <th style='text-align: center'>Actions</th>
     </tr>
   <?php
-  while($row = mysqli_fetch_array($query_run)){
+  while($row = pg_fetch_array($query_run)){
     $status = $row['status'];
     ?>
       <tr>
         <td width='75%'>
           <a href="diary.php?story=<?php echo $row['id'] ?>" style="font-weight:bold"><?php echo nl2br(htmlentities($row['title'])); ?></a><br>
-          <i class="fa fa-clock-o" style='color: #3d3d3d'></i> <?php echo $row['dateAndTime'] ?>
+          <i class="fa fa-clock-o" style='color: #3d3d3d'></i> <?php echo $row['dateandtime'] ?>
         </td>
         <td align='center'>
           <i class="<?php if($status=='Public'){echo 'fa fa-globe';}else echo 'fa fa-lock'; ?>" style='color: #3d3d3d'></i> <?php echo $status ?>

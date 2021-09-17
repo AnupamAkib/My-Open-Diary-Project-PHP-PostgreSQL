@@ -26,13 +26,21 @@ if(isset($_SESSION['logged_in'])){
   }
   //echo $_GET['action'];
   //unset($_SESSION['logged_in']);
+
+  $setting = settings::getInstance();
+
   if(isset($_GET['action'])){
     $act = $_GET['action'];
     if($act == 'login'){
       include 'login.php';
     }
     elseif ($act == 'register') {
-      include 'register.php';
+      if($setting -> getRegistrationSetting()==0){
+        echo "<center><font size='5' color='red'><br>Sorry, New registration is turned off by admin<br><br></font></center>";
+      }
+      else{
+        include 'register.php';
+      }
     }
     else{
       echo "<script>msg('404 Not found!', 'red')</script>";
